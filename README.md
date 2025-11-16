@@ -1,4 +1,4 @@
-```
+
 # Specificații proiect
 
 ## 1. Descriere generală
@@ -193,4 +193,3 @@ Aceste funcționalități nu sunt obligatorii pentru versiunea inițială, dar p
   Verificăm funcționalitățile și rezolvăm eventualele probleme.
 - Realizăm deploy-ul – 2 zile  
   Publicăm aplicația și verificăm funcționarea ei online.
-```
