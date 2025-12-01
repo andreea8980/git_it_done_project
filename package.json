@@ -1,0 +1,28 @@
+{
+  "name": "git_it_done_project",
+  "version": "1.0.0",
+  "description": "Aplicația pe care o vom realiza are ca scop monitorizarea prezenței participanților la diverse activități, precum: cursuri, laboratoare, workshop-uri sau întâlniri. Vrem să înlocuim metoda clasică a prezenței pe hârtie cu un sistem digital, ușor de folosit atât de organizatori, cât și de participanți.   Aplicația va putea fi accesată din browser, de pe calculator, laptop, telefon sau tabletă, fiind construită sub forma unei aplicații de tip Single Page Application (SPA).   La accesarea aplicației, utilizatorul poate alege între două roluri: - Participant - Organizator",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreea8980/git_it_done_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andreea8980/git_it_done_project/issues"
+  },
+  "homepage": "https://github.com/andreea8980/git_it_done_project#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
+  }
+}
