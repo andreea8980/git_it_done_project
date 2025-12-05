@@ -1,6 +1,6 @@
 require('dotenv').config(); 
 const express = require('express');
-const { Sequelize } = require('sequelize');
+const { sequelize } = require('./db.js');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -10,12 +10,6 @@ require('./models/Organizator');
 require('./models/GrupEvenimente'); 
 require('./models/Eveniment'); 
 require('./models/InregistrarePrezenta.js'); 
-
-const sequelize = new Sequelize({
-  dialect: 'sqlite', 
-  storage: process.env.DB_NAME, 
-  logging: false 
-});
 
 async function startServer() {
   try {
