@@ -3,6 +3,8 @@ const express = require('express');
 const { sequelize } = require('./db.js');
 const app = express();
 const port = process.env.PORT || 5000;
+//importam rutele:
+const { organizatorRouter } = require('./routes/organizatorRoutes.js');
 
 app.use(express.json()); 
 
@@ -25,6 +27,8 @@ Eveniment.belongsTo(GrupEvenimente, { foreignKey: 'grup_id' });
 
 Eveniment.hasMany(InregistrarePrezenta, { foreignKey: 'eveniment_id' });
 InregistrarePrezenta.belongsTo(Eveniment, { foreignKey: 'eveniment_id' });
+
+app.use('/organizatori',organizatorRouter);
 
 async function startServer() {
   try {

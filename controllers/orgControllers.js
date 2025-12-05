@@ -48,7 +48,7 @@ async function login(req, res){
             return res.status(401).json({message:'email sau parola incorecta'});
         }
 
-        const match=await bcrypt.compare(parola, organizator.parola);
+        const match=await bcrypt.compare(parola, organizator.parola_hash);
         if(!match){
             return res.status(401).json({message:'email sau parola incorecta'});
         }
@@ -72,4 +72,36 @@ async function login(req, res){
          res.status(500).json({message:'eroare interna de server'});
     }
 }
-module.exports={register,login};
+
+// obtinem toti organizatorii
+const getAll =  async (req,res) => {
+    await Organizator.findAll().then(results => {
+        res.json({
+            status: "succes",
+            organizatori: results
+        });
+    }).catch(error => {
+        res.json({
+            status: "failed",
+            errors: error
+        });
+    });
+};
+
+// obtinem un organizator dupa id
+const getOrganizatorById = async (req,res) => {
+    const id = req.params.id;
+    const organizator = await Organizator.findByPk(id);
+    if(organizator){
+        res.json({
+            status: "succes",
+            organizator
+        })
+    }else{
+        res.status(404).json({
+            status: "failed",
+            message: "Organizator not found"
+        });
+    };
+}
+module.exports = {register, login, getAll, getOrganizatorById};
