@@ -11,6 +11,21 @@ require('./models/GrupEvenimente');
 require('./models/Eveniment'); 
 require('./models/InregistrarePrezenta.js'); 
 
+//definirea relatiilor dintre tabele
+const Organizator = require('./models/Organizator');
+const GrupEvenimente = require('./models/GrupEvenimente');
+const Eveniment = require('./models/Eveniment');
+const InregistrarePrezenta = require('./models/InregistrarePrezenta');
+
+Organizator.hasMany(GrupEvenimente, { foreignKey: 'organizator_id' });
+GrupEvenimente.belongsTo(Organizator, { foreignKey: 'organizator_id' });
+
+GrupEvenimente.hasMany(Eveniment, { foreignKey: 'grup_id' });
+Eveniment.belongsTo(GrupEvenimente, { foreignKey: 'grup_id' });
+
+Eveniment.hasMany(InregistrarePrezenta, { foreignKey: 'eveniment_id' });
+InregistrarePrezenta.belongsTo(Eveniment, { foreignKey: 'eveniment_id' });
+
 async function startServer() {
   try {
     await sequelize.sync({ force: false }); 
