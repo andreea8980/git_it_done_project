@@ -1,7 +1,7 @@
 -Instalare și configurare
 1.	Se clonează proiectul și se accesează directorul proiectului:
--git clone <https://github.com/andreea8980/git_it_done_project.git>
--cd <git_it_done_project>
+-git clone https://github.com/andreea8980/git_it_done_project.git
+-cd git_it_done_project
 2.	Se instalează toate dependențele necesare cu comanda:
 -npm install
 3.	Se creează fișierul .env în rădăcina proiectului, cu următorul conținut:
