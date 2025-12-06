@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000;
 const { organizatorRouter } = require('./routes/organizatorRoutes.js');
 const { grupRouter } = require('./routes/grupRoutes.js');
 const { eventRouter } = require('./routes/eventRoutes.js');
+const { prezentaRouter } = require('./routes/prezentaRoutes.js');
 
 app.use(express.json()); 
 
@@ -35,6 +36,7 @@ app.use(express.json());
 app.use('/api/organizatori',organizatorRouter);
 app.use('/api/grupuri',grupRouter);
 app.use('/api/evenimente', eventRouter);
+app.use('/api/prezenta', prezentaRouter);
 
 async function startServer() {
   try {
