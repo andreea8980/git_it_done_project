@@ -2,7 +2,7 @@
 const Organizator=require('../models/Organizator'); //sa interactionam cu tabela noastra din baza de date
 //biblioteca bcrypt - esentiala pentru securitate, o folosim pentru a cripta(hash) parola inainte de a o salva si pt a o compara la login
 const bcrypt=require('bcrypt'); 
-//JSON web token - odata ce utilizatorul se autentifica trebuie sa gerenam un token('o legitimatie') pe care front end ul il va folosi pentru a accesa rutele securizate 
+//JSON web token - odata ce utilizatorul se autentifica trebuie sa generam un token('o legitimatie') pe care front end ul il va folosi pentru a accesa rutele securizate 
 const jwt=require('jsonwebtoken');
 //citim cheia folosita de jwt pt a semna si a verifica autenticitatea token urilor
 const SECRET_KEY= process.env.JWT_SECRET;
@@ -77,8 +77,8 @@ async function login(req, res){
 const getAll =  async (req,res) => {
     await Organizator.findAll().then(results => {
         res.json({
-            status: "succes",
-            organizatori: results
+            status: "success",
+            data: results
         });
     }).catch(error => {
         res.json({
@@ -94,8 +94,8 @@ const getOrganizatorById = async (req,res) => {
     const organizator = await Organizator.findByPk(id);
     if(organizator){
         res.json({
-            status: "succes",
-            organizator
+            status: "success",
+            data: organizator
         })
     }else{
         res.status(404).json({
