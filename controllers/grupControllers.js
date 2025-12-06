@@ -21,7 +21,7 @@ const getAllGroups = async (req,res) => {
 // get - /api/grupuri/:id
 const getGroupById = async (req,res) => {
     try{
-        id = req.params.id;
+        const id = req.params.id;
         const grup = await GrupEvenimente.findByPk(id);
         
         if(!grup){
@@ -75,7 +75,7 @@ const createGroup = async (req,res) => {
 // put - /api/grupuri/:id
 const updateGroup = async (req,res) => {
     try{
-        id= req.params.id;
+        const id= req.params.id;
         const grup = await GrupEvenimente.findByPk(id);
         if(!grup){
             return res.status(404).json({
@@ -83,8 +83,17 @@ const updateGroup = async (req,res) => {
                 message: "grupul nu exista"
             });
         }
+        const { titlu, descriere, data_start, data_final, recurenta } = req.body;
 
-        await grup.update(req.body);
+        await grup.update({
+            titlu: titlu ?? grup.titlu,
+            descriere: descriere ?? grup.descriere,
+            data_start: data_start ?? grup.data_start,
+            data_final: data_final ?? grup.data_final,
+            recurenta: recurenta ?? grup.recurenta,
+            // nu se pot modifica id si organizator_id - nu ar avea sens
+        });
+
         res.status(200).json({
             status: "sucess",
             data: grup

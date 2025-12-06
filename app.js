@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000;
 //importam rutele:
 const { organizatorRouter } = require('./routes/organizatorRoutes.js');
 const { grupRouter } = require('./routes/grupRoutes.js');
+const { eventRouter } = require('./routes/eventRoutes.js');
 
 app.use(express.json()); 
 
@@ -20,7 +21,6 @@ const Organizator = require('./models/Organizator');
 const GrupEvenimente = require('./models/GrupEvenimente');
 const Eveniment = require('./models/Eveniment');
 const InregistrarePrezenta = require('./models/InregistrarePrezenta');
-const { eventRouter } = require('./routes/eventRoutes.js');
 
 Organizator.hasMany(GrupEvenimente, { foreignKey: 'organizator_id' });
 GrupEvenimente.belongsTo(Organizator, { foreignKey: 'organizator_id' });
