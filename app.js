@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { sequelize } = require('./db.js');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 //importam rutele:
 const { organizatorRouter } = require('./routes/organizatorRoutes.js');

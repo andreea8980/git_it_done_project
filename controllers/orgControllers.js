@@ -5,7 +5,7 @@ const bcrypt=require('bcrypt');
 //JSON web token - odata ce utilizatorul se autentifica trebuie sa generam un token('o legitimatie') pe care front end ul il va folosi pentru a accesa rutele securizate 
 const jwt=require('jsonwebtoken');
 //citim cheia folosita de jwt pt a semna si a verifica autenticitatea token urilor
-const SECRET_KEY= process.env.JWT_SECRET;
+const SECRET_KEY= process.env.JWT_SECRET || "secret_test";
 
 
 //FUNCTIA REGISTER
