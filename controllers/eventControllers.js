@@ -1,4 +1,5 @@
 const Eveniment = require('../models/Eveniment');
+const GrupEvenimente = require('../models/GrupEvenimente');
 
 const generateCode = () =>
   Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -12,6 +13,12 @@ const createEveniment = async (req, res) => {
   }
 
   try {
+    const grup = await GrupEvenimente.findByPk(grup_id);
+    if (!grup) {
+      return res.status(404).json({
+      message: 'Grupul de evenimente nu exista'
+      });
+    }
     const eveniment = await Eveniment.create({
       data_start,
       data_final,
@@ -59,7 +66,13 @@ const updateEveniment = async (req, res) => {
       return res.status(404).json({ message: 'Evenimentul nu exista' });
     }
 
-    await eveniment.update(req.body);
+    const { data_start, data_final } = req.body;
+    await eveniment.update({
+      data_start: data_start ?? eveniment.data_start,
+      data_final: data_final ?? eveniment.data_final,
+      // nu vom puteam modifica id sau grup_id
+    });
+
     res.status(200).json(eveniment);
   } catch (err) {
     res.status(500).json({ message: err.message });
