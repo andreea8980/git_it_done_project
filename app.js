@@ -20,6 +20,7 @@ const Organizator = require('./models/Organizator');
 const GrupEvenimente = require('./models/GrupEvenimente');
 const Eveniment = require('./models/Eveniment');
 const InregistrarePrezenta = require('./models/InregistrarePrezenta');
+const { eventRouter } = require('./routes/eventRoutes.js');
 
 Organizator.hasMany(GrupEvenimente, { foreignKey: 'organizator_id' });
 GrupEvenimente.belongsTo(Organizator, { foreignKey: 'organizator_id' });
@@ -30,8 +31,10 @@ Eveniment.belongsTo(GrupEvenimente, { foreignKey: 'grup_id' });
 Eveniment.hasMany(InregistrarePrezenta, { foreignKey: 'eveniment_id' });
 InregistrarePrezenta.belongsTo(Eveniment, { foreignKey: 'eveniment_id' });
 
+app.use(express.json()); 
 app.use('/api/organizatori',organizatorRouter);
 app.use('/api/grupuri',grupRouter);
+app.use('/api/evenimente', eventRouter);
 
 async function startServer() {
   try {
