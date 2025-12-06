@@ -100,7 +100,28 @@ const updateGroup = async (req,res) => {
 
 // delete - /api/grupuri/:id
 const deleteGroup = async (req,res) => {
+    try{
+        id = req.params.id;
+        const grup = await GrupEvenimente.findByPk(req.params.id);
+        if(!grup){
+            return res.status(404).json({
+                status: "failed",
+                message: "grupul nu exista"
+            });
+        }
 
+        await grup.destroy();
+        res.status(200).json({
+            status: "sucess",
+            message: "grup sters cu succes"
+        });
+    }catch(err){
+        res.status(500).json({
+            status: "failed",
+            message: "eroare la stergerea grupului",
+            error: err.message
+        });
+    }
 };
 
 module.exports = {getAllGroups, getGroupById, createGroup, updateGroup, deleteGroup};
