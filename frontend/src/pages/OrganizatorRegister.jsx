@@ -16,14 +16,14 @@ export default function OrganizatorRegister() {
   setMessage("");
 
   try {
-    // 1) register
+    // 1)register
     await api.post("/organizatori/register", {
       nume: nume.trim(),
       email: email.trim(),
       parola: parola.trim(),
     });
 
-    // 2) login imediat (ca să obții token)
+    // 2)login imediat 
     const loginRes = await api.post("/organizatori/login", {
       email: email.trim(),
       parola: parola.trim(),

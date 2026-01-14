@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/organizator/grup/:grupId" element={<OrganizatorGrup />} />
 
 
-        {/* ca să nu ai “pagina lipsă” când intri pe /organizator */}
+        {}
         <Route path="/organizator" element={<OrganizatorLogin />} />
         <Route path="/organizator/eveniment/:evenimentId" element={<OrganizatorEveniment />} />
 

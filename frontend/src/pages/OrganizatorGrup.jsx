@@ -101,7 +101,6 @@ export default function OrganizatorGrup() {
     }
   }
 
-  // ✅ DELETE GRUP (din pagina grupului)
   async function handleDeleteGrup() {
     const ok = window.confirm("Sigur vrei să ștergi grupul?");
     if (!ok) return;
@@ -204,7 +203,7 @@ export default function OrganizatorGrup() {
           </div>
         )}
 
-        {/* CREATE */}
+        {}
         <div className="card vstack" style={{ marginTop: 16 }}>
           <div className="item-title">Creează eveniment</div>
 

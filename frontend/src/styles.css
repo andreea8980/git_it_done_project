@@ -40,7 +40,6 @@ a:hover { text-decoration: underline; }
   padding: 24px;
 }
 
-/* Navbar */
 .nav {
   position: sticky;
   top: 0;
@@ -76,11 +75,9 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 0 0 6px rgba(79,70,229,.12);
 }
 
-/* Layout helpers */
 .hstack { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .vstack { display: flex; flex-direction: column; gap: 10px; }
 
-/* Centered pages */
 .page-center {
   min-height: calc(100vh - 64px);
   display: grid;
@@ -106,7 +103,6 @@ a:hover { text-decoration: underline; }
   margin-bottom: 18px;
 }
 
-/* Cards */
 .card {
   background: rgba(255,255,255,.95);
   border: 1px solid var(--border);
@@ -117,7 +113,6 @@ a:hover { text-decoration: underline; }
 
 .card-lg { padding: 22px; }
 
-/* Grid (optional, for dashboards) */
 .grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -131,7 +126,6 @@ a:hover { text-decoration: underline; }
   .col-6 { grid-column: span 12; }
 }
 
-/* Forms */
 label {
   font-size: 13px;
   color: var(--muted);
@@ -163,7 +157,7 @@ label {
 
 .form-card {
   width: min(640px, 100%);
-  text-align: left; /* important: form aligned left even inside .hero */
+  text-align: left;
 }
 
 .form-actions {
@@ -174,7 +168,6 @@ label {
   margin-top: 10px;
 }
 
-/* Buttons */
 .btn {
   padding: 10px 14px;
   border: 1px solid var(--border);
@@ -214,7 +207,6 @@ label {
   background: rgba(255,255,255,.75);
 }
 
-/* Role selector (Home) */
 .role-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -240,7 +232,6 @@ label {
   background: rgba(79,70,229,.08);
 }
 
-/* Badges & alerts */
 .badge {
   font-size: 12px;
   padding: 4px 10px;
@@ -260,7 +251,6 @@ label {
 .alert-success { border-color: rgba(22,163,74,.35); background: #e8fff0; }
 .alert-error { border-color: rgba(239,68,68,.35); background: #ffecec; }
 
-/* Titles (for inner pages like Participant/Organizator) */
 .section-title {
   font-size: 28px;
   font-weight: 800;
@@ -306,7 +296,7 @@ label {
 
 #qr-reader {
   width: 100%;
-  min-height: 320px; /* important */
+  min-height: 320px;
 }
 
 #qr-reader video {

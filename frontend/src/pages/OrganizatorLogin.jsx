@@ -68,7 +68,7 @@ export default function OrganizatorLogin() {
               <input
                 className="input"
                 type="password"
-                placeholder="ex: 1234"
+                placeholder="ex: 123456"
                 value={parola}
                 onChange={(e) => setParola(e.target.value)}
               />

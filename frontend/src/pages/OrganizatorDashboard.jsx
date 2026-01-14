@@ -115,7 +115,7 @@ export default function OrganizatorDashboard() {
     }
   }
 
-  // ✅ DELETE GRUP (din dashboard)
+
   async function handleDeleteGrup(grupId) {
     const ok = window.confirm("Sigur vrei să ștergi grupul?");
     if (!ok) return;
@@ -160,7 +160,7 @@ export default function OrganizatorDashboard() {
           </div>
         )}
 
-        {/* CREATE */}
+        {}
         <div className="card col-12 vstack" style={{ marginTop: 16 }}>
           <div className="toolbar">
             <div>
@@ -203,7 +203,7 @@ export default function OrganizatorDashboard() {
           </div>
         </div>
 
-        {/* LIST */}
+        {}
         <div className="card col-12 vstack" style={{ marginTop: 16 }}>
           <div className="toolbar">
             <div>
@@ -264,7 +264,7 @@ export default function OrganizatorDashboard() {
                             Edit
                           </button>
 
-                          {/* ✅ DELETE button */}
+                          {}
                           <button
                             className="btn btn-muted"
                             onClick={() => handleDeleteGrup(g.id)}

@@ -9,7 +9,7 @@ export default function OrganizatorEveniment() {
 
   const [prezente, setPrezente] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState(""); // "" | "success" | "error"
+  const [status, setStatus] = useState(""); 
   const [message, setMessage] = useState("");
 
   const [csvLoading, setCsvLoading] = useState(false);
@@ -46,10 +46,7 @@ export default function OrganizatorEveniment() {
     try {
       setLoading(true);
 
-      // GET /api/prezenta/eveniment/:id (protejat)
       const res = await api.get(`/prezenta/eveniment/${evenimentId}`, { auth: true });
-
-      // client.js returnează deja "data" (nu un Response), dar păstrăm fallback safe
       const list = Array.isArray(res) ? res : (res?.data || []);
       setPrezente(list);
 
@@ -66,14 +63,12 @@ export default function OrganizatorEveniment() {
       setCsvError("");
       setCsvLoading(true);
 
-      // GET /api/prezenta/export/:id (protejat, întoarce text/csv)
       const filename = `prezenta_eveniment_${evenimentId}.csv`;
       await downloadCsv(`/prezenta/export/${evenimentId}`, filename);
 
       showSuccess("CSV exportat.");
     } catch (e) {
       setCsvError(e?.message || "Nu s-a putut exporta CSV.");
-      // dacă vrei și alert mare sus:
       showError(e?.message || "Nu s-a putut exporta CSV.");
     } finally {
       setCsvLoading(false);
@@ -82,7 +77,6 @@ export default function OrganizatorEveniment() {
 
   useEffect(() => {
     loadPrezente();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evenimentId]);
 
   return (
@@ -149,7 +143,7 @@ export default function OrganizatorEveniment() {
                     </div>
                   </div>
 
-                  {/* FĂRĂ DELETE */}
+                  {}
                 </div>
               </div>
             ))}

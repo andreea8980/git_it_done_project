@@ -16,7 +16,7 @@ export async function apiFetch(path, { method = "GET", body, auth = false } = {}
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  // încearcă să parsezi json chiar și la erori
+
   const contentType = res.headers.get("content-type") || "";
   const data = contentType.includes("application/json") ? await res.json() : null;
 

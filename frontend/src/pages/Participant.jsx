@@ -9,13 +9,12 @@ export default function Participant() {
   const [nume, setNume] = useState("");
   const [email, setEmail] = useState("");
 
-  const [status, setStatus] = useState(""); // "" | "success" | "error"
+  const [status, setStatus] = useState(""); 
   const [message, setMessage] = useState("");
 
   const [searchParams] = useSearchParams();
   const codeFromUrl = searchParams.get("code");
 
-  // setăm codul din URL o singură dată (corect: cu useEffect)
   useEffect(() => {
     if (codeFromUrl && codAcces === "") setCodAcces(codeFromUrl);
   }, [codeFromUrl, codAcces]);
@@ -44,7 +43,6 @@ async function handleConfirm() {
     email_participant: email.trim(),
   };
 
-  // validări basic FE (opțional, dar util)
   if (payload.cod_acces.length < 4) {
     showError("Cod invalid (prea scurt).");
     return;
@@ -53,14 +51,8 @@ async function handleConfirm() {
   try {
     const res = await api.post("/prezenta", payload);
 
-    // back-end-ul tău întoarce:
-    // - 201 success (prezenta inregistrata)
-    // - 200 success (participant deja inregistrat)
     showSuccess(res.message || "Prezența a fost înregistrată.");
   } catch (e) {
-    // back-end-ul tău trimite mesaje clare:
-    // - 404: nu exista eveniment
-    // - 400: eveniment inchis etc.
     showError(e.message);
   }
 }

@@ -14,7 +14,6 @@ export default function ParticipantScan() {
     let cancelled = false;
 
     async function start() {
-      // Fix pentru React StrictMode (rulează useEffect de 2 ori în dev)
       if (startedRef.current) return;
       startedRef.current = true;
 
