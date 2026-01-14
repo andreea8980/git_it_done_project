@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout.jsx";
 import { api } from "../api/client.js";
 
 export default function OrganizatorDashboard() {
+  const navigate = useNavigate();
+
   const [grupuri, setGrupuri] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -166,7 +168,7 @@ export default function OrganizatorDashboard() {
   async function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("organizator");
-    showSuccess("Logout ok.");
+    navigate("/organizator/login");
   }
 
   return (
