@@ -1,7 +1,5 @@
 const GrupEvenimente = require('../models/GrupEvenimente')
 const Organizator = require('../models/Organizator')
-const Eveniment = require('../models/Eveniment')
-const InregistrarePrezenta = require('../models/InregistrarePrezenta')
 
 // get - /api/grupuri 
 // actualizare - DOAR grupurile organizatorului autentificat
@@ -133,7 +131,6 @@ const updateGroup = async (req,res) => {
 
 // delete - /api/grupuri/:id
 // actualizare - verificam ca grupul apartine organizatorului autentificat
-// stergere CASCADE manuala - stergem evenimentele si prezentele
 const deleteGroup = async (req,res) => {
     try{
         const id = req.params.id;
@@ -151,30 +148,7 @@ const deleteGroup = async (req,res) => {
             });
         }
 
-        // STERGERE CASCADE MANUALA
-        // 1. Gasim toate evenimentele din acest grup
-        const evenimente = await Eveniment.findAll({
-            where: { grup_id: id },
-            attributes: ['id']
-        });
-        
-        const evenimentIds = evenimente.map(e => e.id);
-        
-        // 2. Stergem toate prezentele din aceste evenimente
-        if(evenimentIds.length > 0){
-            await InregistrarePrezenta.destroy({
-                where: { eveniment_id: evenimentIds }
-            });
-            
-            // 3. Stergem toate evenimentele
-            await Eveniment.destroy({
-                where: { grup_id: id }
-            });
-        }
-        
-        // 4. Stergem grupul
         await grup.destroy();
-        
         res.status(200).json({
             status: "success",
             message: "grup sters cu succes"

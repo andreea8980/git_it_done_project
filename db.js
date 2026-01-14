@@ -7,4 +7,6 @@ const sequelize = new Sequelize({
   logging: false                
 });
 
+sequelize.query('PRAGMA foreign_keys = ON;')
+
 module.exports = { sequelize };
