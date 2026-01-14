@@ -14,6 +14,16 @@ const createEveniment = async (req, res) => {
     return res.status(400).json({ message: 'data_start, data_final si grup_id sunt obligatorii' });
   }
 
+  // VALIDARE NOUA: verificam ca data_final este dupa data_start
+  const start = new Date(data_start);
+  const end = new Date(data_final);
+
+  if (end <= start) {
+    return res.status(400).json({ 
+      message: 'data_final trebuie sa fie dupa data_start' 
+    });
+  }
+
   try {
     const grup = await GrupEvenimente.findOne({
       where: {
@@ -125,6 +135,18 @@ const updateEveniment = async (req, res) => {
     }
     
     const { data_start, data_final } = req.body;
+
+    // calculam noile date (folosim cele existente daca nu sunt furnizate)
+    const newStart = data_start ? new Date(data_start) : new Date(eveniment.data_start);
+    const newEnd = data_final ? new Date(data_final) : new Date(eveniment.data_final);
+    
+    // VALIDARE: verificam ca data_final este dupa data_start
+    if (newEnd <= newStart) {
+      return res.status(400).json({ 
+        message: 'data_final trebuie sa fie dupa data_start' 
+      });
+    }
+
     await eveniment.update({
       data_start: data_start ?? eveniment.data_start,
       data_final: data_final ?? eveniment.data_final,
