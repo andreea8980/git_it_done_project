@@ -1,6 +1,7 @@
 const InregistrarePrezenta = require('../models/InregistrarePrezenta');
 const Eveniment = require('../models/Eveniment')
 const GrupEvenimente = require('../models/GrupEvenimente');
+const { Parser } = require('json2csv'); 
 
 // functie care calculeaza daca un eveniment este OPEN sau CLOSED pe baza data_start si data_final din eveniment
 const eventOpenOrClosed = (eveniment) => {
@@ -122,7 +123,7 @@ const getPrezenteEveniment = async (req,res) => {
             where: {
                 eveniment_id: id
             },
-            order: [['timestamp_confirmare', 'ASC']] // sortare cronologică
+            order: [['timestamp_confirmare', 'ASC']] // sortare cronologica
         });
 
         res.status(200).json({
@@ -147,4 +148,77 @@ const getPrezenteEveniment = async (req,res) => {
     }
 };
 
-module.exports = { createPrezenta, getPrezenteEveniment }
+// functie pt export CSV lista prezenta pentru un eveniment
+const exportPrezentaEveniment = async (req, res) => {
+    try {
+        const evenimentId = req.params.id;
+        const organizator_id = req.user.id;
+
+        // verificqm ownership
+        const eveniment = await Eveniment.findByPk(evenimentId, {
+            include: [{
+                model: GrupEvenimente,
+                attributes: ['organizator_id', 'titlu']
+            }]
+        });
+
+        if (!eveniment) {
+            return res.status(404).json({
+                status: "failed",
+                message: "evenimentul nu a fost gasit"
+            });
+        }
+
+        if (eveniment.GrupEvenimente.organizator_id !== organizator_id) {
+            return res.status(403).json({
+                status: "failed",
+                message: "nu aveti permisiunea sa exportati prezentele pentru acest eveniment"
+            });
+        }
+
+        // preluam toate prezentele
+        const prezente = await InregistrarePrezenta.findAll({
+            where: { eveniment_id: evenimentId },
+            order: [['timestamp_confirmare', 'ASC']]
+        });
+
+        if (prezente.length === 0) {
+            return res.status(404).json({
+                status: "failed",
+                message: "nu exista prezente inregistrate pentru acest eveniment"
+            });
+        }
+
+        // pregatim datele pentru CSV - DOAR lista participantilor
+        const csvData = prezente.map(p => ({
+            'Nume': p.nume_participant,
+            'Email': p.email_participant,
+            'Data/Ora Confirmare': new Date(p.timestamp_confirmare).toLocaleString('ro-RO')
+        }));
+
+        // generam CSV
+        const parser = new Parser({
+            fields: ['Nume', 'Email', 'Data/Ora Confirmare'],
+            delimiter: ',',
+            withBOM: true // pentru diacritice în Excel
+        });
+
+        const csv = parser.parse(csvData);
+
+        // setam headers pentru download
+        const fileName = `lista_prezenta_${evenimentId}_${Date.now()}.csv`;
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+        res.status(200).send(csv);
+
+    } catch (err) {
+        res.status(500).json({
+            status: "failed",
+            message: "eroare la exportul prezentei",
+            error: err.message
+        });
+    }
+};
+
+module.exports = { createPrezenta, getPrezenteEveniment , exportPrezentaEveniment };

@@ -1,5 +1,6 @@
 const GrupEvenimente = require('../models/GrupEvenimente')
 const Organizator = require('../models/Organizator')
+const { getRandomQuote } = require('../services/quoteService');
 
 // get - /api/grupuri 
 // actualizare - DOAR grupurile organizatorului autentificat
@@ -28,7 +29,6 @@ const getGroupById = async (req,res) => {
     try{
         const id = req.params.id;
         const organizator_id = req.user.id; // din token
-        
         const grup = await GrupEvenimente.findOne({
             where: { 
                 id,
@@ -61,9 +61,14 @@ const getGroupById = async (req,res) => {
 // actualizare - luam organizator_id DIN TOKEN nu din body
 const createGroup = async (req,res) => {
     try{
-        const {titlu, descriere, data_start, data_final, recurenta} = req.body;
+        let {titlu, descriere, data_start, data_final, recurenta} = req.body;
         const organizator_id = req.user.id; // din token
         
+        // FUNCTIONALITATE NOUA - daca nu avem descriere pune una cu api de quotes
+        if (!descriere || descriere.trim() === '') {
+            descriere = await getRandomQuote();
+        }
+
         // nu mai verificam organizatorul - stim sigur ca exista (e autentificat)
         const grupNou = await GrupEvenimente.create({
             titlu, 
@@ -76,7 +81,9 @@ const createGroup = async (req,res) => {
 
         res.status(201).json({
             status: "success",
-            data: grupNou
+            data: grupNou,
+            quote_generat: !req.body.descriere || req.body.descriere.trim() === '' 
+            // indica daca descrierea a fost generata automat
         });
     }catch(err){
         res.status(500).json({
