@@ -25,6 +25,11 @@ const Eveniment = sequelize.define(
     grup_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'grup_evenimente',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
   },
   {

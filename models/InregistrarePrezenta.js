@@ -25,6 +25,11 @@ const InregistrarePrezenta = sequelize.define(
     eveniment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'eveniment',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
   },
   {

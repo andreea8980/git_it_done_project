@@ -23,14 +23,30 @@ const GrupEvenimente = require('./models/GrupEvenimente');
 const Eveniment = require('./models/Eveniment');
 const InregistrarePrezenta = require('./models/InregistrarePrezenta');
 
-Organizator.hasMany(GrupEvenimente, { foreignKey: 'organizator_id' });
-GrupEvenimente.belongsTo(Organizator, { foreignKey: 'organizator_id' });
+// actualizare - relatii pentru CASCADE DELETE
+Organizator.hasMany(GrupEvenimente, { 
+  foreignKey: 'organizator_id',
+  onDelete: 'CASCADE' 
+});
+GrupEvenimente.belongsTo(Organizator, { 
+  foreignKey: 'organizator_id' 
+});
 
-GrupEvenimente.hasMany(Eveniment, { foreignKey: 'grup_id' });
-Eveniment.belongsTo(GrupEvenimente, { foreignKey: 'grup_id' });
+GrupEvenimente.hasMany(Eveniment, { 
+  foreignKey: 'grup_id',
+  onDelete: 'CASCADE' 
+});
+Eveniment.belongsTo(GrupEvenimente, { 
+  foreignKey: 'grup_id' 
+});
 
-Eveniment.hasMany(InregistrarePrezenta, { foreignKey: 'eveniment_id' });
-InregistrarePrezenta.belongsTo(Eveniment, { foreignKey: 'eveniment_id' });
+Eveniment.hasMany(InregistrarePrezenta, { 
+  foreignKey: 'eveniment_id',
+  onDelete: 'CASCADE' 
+});
+InregistrarePrezenta.belongsTo(Eveniment, { 
+  foreignKey: 'eveniment_id' 
+});
 
 app.use(express.json()); 
 app.use('/api/organizatori',organizatorRouter);
