@@ -1,5 +1,6 @@
 const InregistrarePrezenta = require('../models/InregistrarePrezenta');
 const Eveniment = require('../models/Eveniment')
+const GrupEvenimente = require('../models/GrupEvenimente');
 
 // functie care calculeaza daca un eveniment este OPEN sau CLOSED pe baza data_start si data_final din eveniment
 const eventOpenOrClosed = (eveniment) => {
@@ -13,7 +14,7 @@ const eventOpenOrClosed = (eveniment) => {
     return "OPEN";
 }
 
-// post - /api/prezenta
+// post - /api/prezenta - fara AUTH pentru participanti care nu au cont
 const createPrezenta = async (req,res) => {
     try{
         // vom trimite codul de acces in pachet
@@ -88,28 +89,52 @@ const createPrezenta = async (req,res) => {
 };
 
 // get - /api/prezenta/:id - functia afiseaza toate prezentele pt un eveniment
+// actualizare - cu AUTH doar pt organizatorul autentificat
 const getPrezenteEveniment = async (req,res) => {
     try{
         const id = req.params.id;
+        const organizator_id = req.user.id; // din token
 
-        // verficam daca exista evenimentul
-        const eveniment = await Eveniment.findByPk(id);
+        // cautam evenimentul si verificam ownership-ul
+        const eveniment = await Eveniment.findByPk(id, {
+            include: [{
+                model: GrupEvenimente,
+                attributes: ['organizator_id', 'titlu']
+            }]
+        });
+
         if(!eveniment){
             return res.status(404).json({
                 status: "failed",
                 message: "evenimentul nu a fost gasit"
             });
         }
+
+        // verificam ca evenimentul apartine unui grup al organizatorului
+        if(eveniment.GrupEvenimente.organizator_id !== organizator_id){
+            return res.status(403).json({
+                status: "failed",
+                message: "nu aveti permisiunea sa vizualizati prezentele pentru acest eveniment"
+            });
+        }
         
         const prezente = await InregistrarePrezenta.findAll({
             where: {
                 eveniment_id: id
-            }
+            },
+            order: [['timestamp_confirmare', 'ASC']] // sortare cronologică
         });
 
         res.status(200).json({
             status: "success",
-            event_id: id,
+            eveniment: {
+                id: eveniment.id,
+                cod_acces: eveniment.cod_acces,
+                data_start: eveniment.data_start,
+                data_final: eveniment.data_final,
+                stare: eventOpenOrClosed(eveniment),
+                grup_titlu: eveniment.GrupEvenimente.titlu
+            },
             total_prezente: prezente.length,
             data: prezente
         });
@@ -120,6 +145,6 @@ const getPrezenteEveniment = async (req,res) => {
             error: err.message
         });
     }
-}
+};
 
 module.exports = { createPrezenta, getPrezenteEveniment }

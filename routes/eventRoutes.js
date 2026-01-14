@@ -2,13 +2,15 @@ const express = require('express');
 const eventRouter = express.Router();
 const {getAllEvenimente,getEvenimentById, createEveniment, updateEveniment, deleteEveniment} = require('../controllers/eventControllers');
 
-eventRouter.get('/', getAllEvenimente);
-eventRouter.get('/:id', getEvenimentById);
+// importam middleware de auth
+const { authenticateToken } = require('../middleware/auth');
 
-eventRouter.post('/', createEveniment);
-
-eventRouter.put('/:id', updateEveniment);
-
-eventRouter.delete('/:id', deleteEveniment);
+// aplicam middleware-ul de autentificare pentru toate rutele din acest router
+// toate rutele vor necesita un token valid pentru a accesa resursele
+eventRouter.get('/', authenticateToken, getAllEvenimente);
+eventRouter.get('/:id', authenticateToken, getEvenimentById);
+eventRouter.post('/', authenticateToken, createEveniment);
+eventRouter.put('/:id', authenticateToken, updateEveniment);
+eventRouter.delete('/:id', authenticateToken, deleteEveniment);
 
 module.exports = { eventRouter };
