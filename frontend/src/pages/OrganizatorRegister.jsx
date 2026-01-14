@@ -72,7 +72,7 @@ export default function OrganizatorRegister() {
               <input
                 className="input"
                 type="password"
-                placeholder="minim 4 caractere"
+                placeholder="minim 6 caractere"
                 value={parola}
                 onChange={(e) => setParola(e.target.value)}
               />
