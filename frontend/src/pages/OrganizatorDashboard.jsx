@@ -11,6 +11,11 @@ export default function OrganizatorDashboard() {
   const [titlu, setTitlu] = useState("");
   const [descriere, setDescriere] = useState("");
 
+  const [dataStart, setDataStart] = useState("");
+  const [dataFinal, setDataFinal] = useState("");
+  const [recurenta, setRecurenta] = useState("");
+  const [durataOre, setDurataOre] = useState(2);
+
   // edit grup
   const [editingId, setEditingId] = useState(null);
   const [editTitlu, setEditTitlu] = useState("");
@@ -60,8 +65,29 @@ export default function OrganizatorDashboard() {
       return;
     }
 
+    if (recurenta && (!dataStart || !dataFinal)) {
+      showError("Pentru recurență trebuie să setezi data start și data final.");
+      return;
+    }
+
+    if (dataStart && dataFinal) {
+      const start = new Date(dataStart);
+      const end = new Date(dataFinal);
+      if (end <= start) {
+        showError("Data final trebuie să fie după data start.");
+        return;
+      }
+    }
+
     try {
-      const payload = { titlu: titlu.trim(), descriere: descriere.trim() };
+      const payload = { 
+        titlu: titlu.trim(), 
+        descriere: descriere.trim(),
+        data_start: dataStart ? new Date(dataStart).toISOString() : null,
+        data_final: dataFinal ? new Date(dataFinal).toISOString() : null,
+        recurenta: recurenta || null,
+        durata_ore: durataOre
+      };
       const res = await api.post("/grupuri", payload, { auth: true });
 
       const created = res?.data ?? res;
@@ -69,6 +95,11 @@ export default function OrganizatorDashboard() {
 
       setTitlu("");
       setDescriere("");
+      setDataStart("");
+      setDataFinal("");
+      setRecurenta("");
+      setDurataOre(2);
+
       showSuccess("Grup creat.");
     } catch (e) {
       showError(e.message);
@@ -194,7 +225,60 @@ export default function OrganizatorDashboard() {
                 />
               </div>
             </div>
-          </div>
+            <div className="col-6">
+    <div className="field">
+      <label>Data start (primul eveniment)</label>
+      <input
+        className="input"
+        type="datetime-local"
+        value={dataStart}
+        onChange={(e) => setDataStart(e.target.value)}
+      />
+    </div>
+  </div>
+
+  <div className="col-6">
+    <div className="field">
+      <label>Data final (limită generare)</label>
+      <input
+        className="input"
+        type="datetime-local"
+        value={dataFinal}
+        onChange={(e) => setDataFinal(e.target.value)}
+      />
+    </div>
+  </div>
+
+  <div className="col-6">
+    <div className="field">
+      <label>Recurență (opțional)</label>
+      <select
+        className="input"
+        value={recurenta}
+        onChange={(e) => setRecurenta(e.target.value)}
+      >
+        <option value="">-- Fără recurență --</option>
+        <option value="saptamanal">Săptămânal</option>
+        <option value="bisaptamanal">La 2 săptămâni</option>
+        <option value="lunar">Lunar</option>
+      </select>
+    </div>
+  </div>
+
+  <div className="col-6">
+    <div className="field">
+      <label>Durata eveniment (ore)</label>
+      <input
+        className="input"
+        type="number"
+        min="1"
+        max="12"
+        value={durataOre}
+        onChange={(e) => setDurataOre(Number(e.target.value))}
+      />
+    </div>
+  </div>
+</div>
 
           <div className="hstack" style={{ justifyContent: "flex-end", marginTop: 10 }}>
             <button className="btn btn-primary" onClick={handleAddGrup} disabled={!titlu.trim()}>
@@ -230,6 +314,12 @@ export default function OrganizatorDashboard() {
                         <>
                           <div className="item-title">{g.titlu}</div>
                           <div className="muted">{g.descriere || "-"}</div>
+
+                          {g.recurenta && (
+                            <div className="badge">
+                              Recurență: {g.recurenta}
+                            </div>
+                          )}
                         </>
                       ) : (
                         <>
