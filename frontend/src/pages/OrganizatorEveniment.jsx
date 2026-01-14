@@ -3,10 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import Layout from "../components/Layout.jsx";
 import { api } from "../api/client.js";
 import { downloadCsv } from "../api/downloadCsv.js";
+import { QRCodeCanvas } from "qrcode.react";
 
 export default function OrganizatorEveniment() {
   const { evenimentId } = useParams();
 
+  const [eveniment, setEveniment] = useState(null);
   const [prezente, setPrezente] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState(""); 
@@ -42,13 +44,19 @@ export default function OrganizatorEveniment() {
   async function loadPrezente() {
     setStatus("");
     setMessage("");
+    setCsvError("");
 
     try {
       setLoading(true);
 
       const res = await api.get(`/prezenta/eveniment/${evenimentId}`, { auth: true });
-      const list = Array.isArray(res) ? res : (res?.data || []);
+
+      const list = Array.isArray(res) ? res : res?.data || [];
       setPrezente(list);
+
+      if (!Array.isArray(res) && res?.eveniment) {
+        setEveniment(res.eveniment);
+      }
 
       showSuccess("Prezențe încărcate.");
     } catch (e) {
@@ -69,7 +77,6 @@ export default function OrganizatorEveniment() {
       showSuccess("CSV exportat.");
     } catch (e) {
       setCsvError(e?.message || "Nu s-a putut exporta CSV.");
-      showError(e?.message || "Nu s-a putut exporta CSV.");
     } finally {
       setCsvLoading(false);
     }
@@ -117,6 +124,43 @@ export default function OrganizatorEveniment() {
         {csvError && (
           <div className="alert alert-error" style={{ marginTop: 10 }}>
             {csvError}
+          </div>
+        )}
+
+        {eveniment?.cod_acces && (
+          <div className="card vstack" style={{ marginTop: 16 }}>
+            <div className="item-title">Cod acces & QR</div>
+            <div className="muted" style={{ fontSize: 13 }}>
+              Arată codul sau QR-ul participanților pentru confirmarea prezenței.
+            </div>
+
+            <div
+              className="hstack"
+              style={{ gap: 20, alignItems: "center", marginTop: 10, flexWrap: "wrap" }}
+            >
+              <div className="vstack" style={{ gap: 6 }}>
+                <div className="muted">Cod acces:</div>
+                <div style={{ fontWeight: 800, fontSize: 22, letterSpacing: 1 }}>
+                  {eveniment.cod_acces}
+                </div>
+
+                <div className="muted" style={{ fontSize: 12 }}>
+                  Interval:{" "}
+                  <b>
+                    {formatDate(eveniment.data_start)} – {formatDate(eveniment.data_final)}
+                  </b>
+                </div>
+
+                <div className="muted" style={{ fontSize: 12 }}>
+                  Stare: <b>{eveniment.stare}</b>
+                </div>
+              </div>
+
+              <div className="vstack" style={{ gap: 6, alignItems: "center" }}>
+                <QRCodeCanvas value={eveniment.cod_acces} size={160} />
+                <div className="muted" style={{ fontSize: 12 }}>(scanabil)</div>
+              </div>
+            </div>
           </div>
         )}
 
