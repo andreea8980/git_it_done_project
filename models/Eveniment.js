@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db');
 
+// statusul evenimentului OPEN/CLOSED nu il vom retine, 
+// ci se va calcula pe baza data_start si data_final
 const Eveniment = sequelize.define(
   'Eveniment',
   {
