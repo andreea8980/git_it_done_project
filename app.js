@@ -3,12 +3,15 @@ const express = require('express');
 const { sequelize } = require('./db.js');
 const app = express();
 const port = process.env.PORT || 3000;
+const cors = require("cors");
+
 
 //importam rutele:
 const { organizatorRouter } = require('./routes/organizatorRoutes.js');
 const { grupRouter } = require('./routes/grupRoutes.js');
 const { eventRouter } = require('./routes/eventRoutes.js');
 const { prezentaRouter } = require('./routes/prezentaRoutes.js');
+
 
 app.use(express.json()); 
 
@@ -48,6 +51,17 @@ InregistrarePrezenta.belongsTo(Eveniment, {
   foreignKey: 'eveniment_id' 
 });
 
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://git-it-done-project-1.onrender.com" 
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+//app.options("/*", cors());
+
 app.use(express.json()); 
 app.use('/api/organizatori',organizatorRouter);
 app.use('/api/grupuri',grupRouter);
@@ -73,4 +87,4 @@ async function startServer() {
 }
 
 startServer();
-module.exports = { sequelize };
+//module.exports = { sequelize };

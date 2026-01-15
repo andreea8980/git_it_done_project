@@ -1,26 +1,32 @@
-require('dotenv').config();
-const { Sequelize } = require('sequelize');
+require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
-const sequelize = process.env.DATABASE_URL 
-  ? new Sequelize(process.env.DATABASE_URL, {
-      dialect: 'postgres',
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
+let sequelize;
+
+if (process.env.DATABASE_URL) {
+  // Production (Render) -> PostgreSQL
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: "postgres",
+    protocol: "postgres",
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
       },
-      logging: false
-    })
-  : new Sequelize({
-      dialect: 'sqlite',
-      storage: process.env.DB_NAME,
-      logging: false
-    });
+    },
+  });
+} else {
+  // Local -> SQLite
+  const dbName = process.env.DB_NAME || "presence.sqlite";
+  sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: dbName,
+    logging: false,
+  });
 
-// PRAGMA functioneaza doar pt SQLite, ignoram eroarea pt PostgreSQL
-sequelize.query('PRAGMA foreign_keys = ON;').catch(() => {
-  // silent fail pentru PostgreSQL
-});
+  // PRAGMA doar pentru SQLite
+  sequelize.query("PRAGMA foreign_keys = ON;");
+}
 
 module.exports = { sequelize };
